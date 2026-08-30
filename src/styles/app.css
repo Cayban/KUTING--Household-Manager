@@ -95,18 +95,20 @@
 
 .profile-picker__title { font-size: 1.3rem; margin-bottom: 6px; }
 .profile-picker__sub { color: var(--text-dim); margin: 0 0 22px; font-size: 0.88rem; }
-.profile-picker__grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 6px; }
+.profile-picker__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 6px; }
+.profile-picker__grid > *:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .profile-chip {
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
   border: 1px solid var(--border); background: var(--surface); border-radius: var(--radius-md);
-  padding: 14px 18px; font-family: var(--font-body); font-weight: 700; color: var(--text);
+  padding: 14px 10px; font-family: var(--font-body); font-weight: 700; color: var(--text);
   transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  width: 100%; text-align: center; line-height: 1.15;
 }
 .profile-chip:hover { transform: translateY(-2px); border-color: var(--border-strong); }
 .profile-chip--active { border-color: var(--chip-color); box-shadow: 0 0 0 3px color-mix(in srgb, var(--chip-color) 28%, transparent); }
 .profile-chip--add { border-style: dashed; color: var(--text-dim); }
 .profile-chip__avatar {
-  width: 42px; height: 42px; border-radius: 50%; background: var(--chip-color);
+  width: 42px; height: 42px; border-radius: 50%; background: var(--chip-color); flex-shrink: 0;
   color: #fff; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700;
 }
 .profile-chip__avatar--add { background: var(--surface); border: 1px dashed var(--border-strong); color: var(--text-dim); }
@@ -165,7 +167,7 @@
   .profile-picker__body { padding: 16px 14px 22px; }
   .profile-picker__wordmark { font-size: 1.25rem; }
   .profile-picker__grid { justify-content: space-between; }
-  .profile-chip { flex: 1 1 calc(50% - 8px); padding: 10px 8px; }
+  .profile-chip { padding: 10px 8px; }
 }
 
 /* Short or landscape viewports: shrink the hero so the password field and
@@ -185,7 +187,8 @@ input, textarea, select {
   min-width: 0;
 }
 input::placeholder, textarea::placeholder { color: var(--text-faint); }
-input:focus, textarea:focus, select:focus { border-color: var(--border-strong); }
+input:focus, textarea:focus, select:focus { border-color: var(--border-strong); outline: none; box-shadow: none; }
+input:invalid, textarea:invalid { box-shadow: none; }
 select {
   appearance: none; -webkit-appearance: none; padding-right: 34px; cursor: pointer;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%239096A8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");

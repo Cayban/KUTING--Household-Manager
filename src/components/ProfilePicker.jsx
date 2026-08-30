@@ -155,7 +155,7 @@ export default function ProfilePicker({ siblings }) {
           ))}
           <button className="profile-chip profile-chip--add" onClick={goToSignup}>
             <span className="profile-chip__avatar profile-chip__avatar--add"><Plus size={16} /></span>
-            <span>Add sibling</span>
+            <span>Add</span>
           </button>
         </div>
 
