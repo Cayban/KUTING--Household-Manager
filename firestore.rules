@@ -1,0 +1,52 @@
+rules_version = '2';
+
+// Each sibling has their own real Firebase Auth account (email/password,
+// with a synthetic @homesync.local address generated from their name — see
+// src/lib/auth.js). request.auth.uid always matches that sibling's
+// /siblings/{uid} document id, since ProfilePicker writes the sibling doc
+// under the uid it just got back from signUp().
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function isSelf(id) {
+      return signedIn() && request.auth.uid == id;
+    }
+
+    // Public read: the "pick your name" screen has to list every sibling's
+    // name and avatar color *before* anyone is logged in. Nothing sensitive
+    // lives on this doc (no password — Firebase Auth holds that separately).
+    // Each sibling may only create or edit their own document.
+    match /siblings/{siblingId} {
+      allow read: if true;
+      allow create, update: if isSelf(siblingId);
+      allow delete: if false;
+    }
+
+    // Private household app — every signed-in sibling can read/write any
+    // chore (assign each other tasks, mark done, verify each other's work).
+    // This is a deliberately permissive trust model for a 3-person household,
+    // not an oversight.
+    match /chores/{choreId} {
+      allow read, write: if signedIn();
+
+      match /comments/{commentId} {
+        allow read, write: if signedIn();
+      }
+    }
+
+    // Anyone signed in can post a note; only the author can delete their own.
+    match /notes/{noteId} {
+      allow read, create: if signedIn();
+      allow update: if false;
+      allow delete: if isSelf(resource.data.authorId);
+    }
+
+    // Append-only activity log — no edits or deletes from the client.
+    match /history/{entryId} {
+      allow read, create: if signedIn();
+      allow update, delete: if false;
+    }
+  }
+}

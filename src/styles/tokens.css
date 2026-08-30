@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
+:root {
+  color-scheme: dark;
+
+  /* --- Surfaces --- */
+  --bg: #101116;
+  --bg-elevated: #16181F;
+  --surface: rgba(255,255,255,0.05);
+  --surface-solid: #1B1E27;
+  --surface-hover: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.09);
+  --border-strong: rgba(255,255,255,0.16);
+
+  --text: #F5F6FA;
+  --text-dim: #9096A8;
+  --text-faint: #666C7D;
+
+  /* --- Brand gradient (primary actions, active states) --- */
+  --grad: linear-gradient(135deg, #FF6B5B 0%, #B34CFF 55%, #6C5CE7 100%);
+  --grad-soft: linear-gradient(135deg, rgba(255,107,91,0.16), rgba(108,92,231,0.16));
+  --brand: #FF6B5B;
+
+  /* --- Status colors (vivid on dark) --- */
+  --pending: #FFB020;
+  --pending-bg: rgba(255,176,32,0.14);
+  --progress: #4C9AFF;
+  --progress-bg: rgba(76,154,255,0.14);
+  --verify: #B98CFF;
+  --verify-bg: rgba(185,140,255,0.14);
+  --done: #2FE6A0;
+  --done-bg: rgba(47,230,160,0.14);
+  --overdue: #FF4757;
+  --overdue-bg: rgba(255,71,87,0.14);
+
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.2), 0 10px 30px rgba(0,0,0,0.28);
+  --shadow-float: 0 12px 40px rgba(0,0,0,0.45);
+  --blur: blur(20px);
+
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body, #root { height: 100%; }
+html, body { overflow-x: hidden; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(255,107,91,0.10), transparent 45%),
+    radial-gradient(circle at 90% 15%, rgba(108,92,231,0.12), transparent 45%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  margin: 0;
+  color: var(--text);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+button { font-family: var(--font-body); cursor: pointer; }
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.01em;
+}
+
+/* Glass surface used across nav, sheets, and cards */
+.glass {
+  background: var(--surface);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border);
+}
+
+/* Status indicator: a colored dot + label, used everywhere status appears */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.74rem;
+  padding: 4px 10px 4px 8px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+.status-pill__dot {
+  width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0;
+  box-shadow: 0 0 8px currentColor;
+}
+.status-pill--animated { animation: pill-pop 0.32s cubic-bezier(0.2, 0.8, 0.3, 1.2); }
+@keyframes pill-pop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
