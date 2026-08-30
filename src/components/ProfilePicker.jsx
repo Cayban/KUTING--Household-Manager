@@ -6,6 +6,16 @@ import dogHero from "../assets/frontDog.webp";
 
 const AVATAR_COLORS = ["#E0A339", "#3E7CB1", "#B65C3F", "#3F7D5C", "#8A5CB6"];
 
+// If Firestore/Auth ever hangs instead of resolving or rejecting, this makes
+// sure the button doesn't get stuck forever — the user sees an error and can
+// retry, instead of staring at "Creating…" with no way out.
+function withTimeout(promise, ms, message) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(message)), ms)),
+  ]);
+}
+
 function Brand({ tagline }) {
   return (
     <>
@@ -63,13 +73,17 @@ export default function ProfilePicker({ siblings }) {
     try {
       const email = emailForName(name);
       const role = siblings.length === 0 ? "admin" : "member";
-      const user = await signUp(email, password);
-      await upsertSibling(user.uid, {
-        name: name.trim(),
-        email,
-        role,
-        avatarColor: AVATAR_COLORS[siblings.length % AVATAR_COLORS.length],
-      });
+      const user = await withTimeout(signUp(email, password), 10000, "That's taking too long — check your connection and try again.");
+      await withTimeout(
+        upsertSibling(user.uid, {
+          name: name.trim(),
+          email,
+          role,
+          avatarColor: AVATAR_COLORS[siblings.length % AVATAR_COLORS.length],
+        }),
+        10000,
+        "Your account was created, but saving your profile timed out — try logging in, or ask an admin to check Firestore access."
+      );
     } catch (err) {
       setError(authErrorMessage(err));
     } finally {

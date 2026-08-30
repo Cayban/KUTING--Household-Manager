@@ -48,6 +48,11 @@ export async function signUp(email, password) {
     return demoUser;
   }
   const cred = await createUserWithEmailAndPassword(auth, email, password);
+  // Force-refresh the ID token so the Firestore write that immediately
+  // follows signup definitely has a fully-propagated auth context — without
+  // this, the very next request can occasionally be evaluated as
+  // unauthenticated and get silently rejected by security rules.
+  await cred.user.getIdToken(true);
   return cred.user;
 }
 
