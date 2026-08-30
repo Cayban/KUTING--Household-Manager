@@ -15,7 +15,7 @@ import HistoryLog from "./components/HistoryLog";
 import FilterSheet from "./components/FilterSheet";
 import ProfileMenu from "./components/Profilemenu";
 import ProfilePage from "./components/Profilepage";
-import LoadingScreen from "./components/Loadingscreen";
+import LoadingScreen from "./components/LoadingScreen";
 import "./styles/tokens.css";
 import "./styles/app.css";
 
