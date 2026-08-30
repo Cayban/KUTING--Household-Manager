@@ -10,6 +10,7 @@ export default function ChoreDetail({ chore, siblings, me, onClose, onEdit }) {
   const [text, setText] = useState("");
   const [verifyNote, setVerifyNote] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [photoError, setPhotoError] = useState("");
 
   useEffect(() => subscribeComments(chore.id, setComments), [chore.id]);
 
@@ -24,12 +25,15 @@ export default function ChoreDetail({ chore, siblings, me, onClose, onEdit }) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
+    setPhotoError("");
     try {
       const path = `proofs/${chore.id}/${Date.now()}-${file.name}`;
       const r = ref(storage, path);
       await uploadBytes(r, file);
       const url = await getDownloadURL(r);
       await updateChore(chore.id, { proofPhotoUrl: url });
+    } catch (err) {
+      setPhotoError("Photo uploads aren't set up yet for this household.");
     } finally {
       setUploading(false);
     }
@@ -117,6 +121,8 @@ export default function ChoreDetail({ chore, siblings, me, onClose, onEdit }) {
             <button className="btn-primary" onClick={markCompleted}>Mark completed again</button>
           )}
         </div>
+
+        {photoError && <p className="form-error">{photoError}</p>}
 
         {chore.status === "verification" && (
           <div className="verify-box">
